@@ -14,22 +14,36 @@ const App = () => {
 
   const [selected, setSelected] = useState(0);
   const [points, setPoints] = useState(new Uint8Array(anecdotes.length));
+  // stores the index and number of votes for the anecdote with the most votes
+  const [mostVoted, setMostVoted] = useState([0, 0]);
+
   const handleAnecdote = () => {
     const randomNum = Math.floor(Math.random() * anecdotes.length);
     setSelected(randomNum);
   };
 
   const handleVote = () => {
-    const copy = [...points];
-    copy[selected] += 1;
-    setPoints(copy);
+    // copy the points array and increment the number of votes for the current anecdote
+    const pointsCopy = [...points];
+    pointsCopy[selected] += 1;
+    setPoints(pointsCopy);
+
+    // if current anecdotes has more votes than the most voted anecdote, set it as the most voted
+    if (pointsCopy[selected] > mostVoted[1]) {
+      const mostVoted = [selected, pointsCopy[selected]];
+      setMostVoted(mostVoted);
+    }
   };
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>has {points[selected]} votes</p>
       <button onClick={handleVote}>vote</button>
       <button onClick={handleAnecdote}>next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[mostVoted[0]]}</p>
+      <p>has {mostVoted[1]} votes</p>
     </div>
   );
 };
