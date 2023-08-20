@@ -1,6 +1,6 @@
 import React from "react";
 
-const Header = ({ course }) => <h1>{course}</h1>;
+const Header = ({ course }) => <h2>{course}</h2>;
 
 const Total = ({ parts }) => {
   const sum = parts.reduce((sum, part) => part.exercises + sum, 0);
