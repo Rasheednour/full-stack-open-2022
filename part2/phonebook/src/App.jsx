@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import SearchFilter from "./components/searchFilter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import axios from "axios";
+import personsService from "./components/services/PersonsService";
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
@@ -10,10 +11,8 @@ const App = () => {
   const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) => {
-        setPersons(response.data);
+    personsService.getAllPersons().then((personsData) => {
+      setPersons(personsData);
     });
   }, []);
 
@@ -46,15 +45,12 @@ const App = () => {
       }
     }
     if (!nameExists) {
-      const personObject = { name: newName, number: newNumber }
-      axios
-      .post('http://localhost:3001/persons', personObject)
-      .then(response=>{
-        setPersons(persons.concat(response.data))
+      const personObject = { name: newName, number: newNumber };
+      personsService.createPerson(personObject).then((newPerson) => {
+        setPersons(persons.concat(newPerson));
         setNewName("");
         setNewNumber("");
-      })
-      
+      });
     }
   };
   return (
