@@ -47,10 +47,24 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     let nameExists = false;
+    let updateNumber = false;
+    let personID = 0;
     for (let i = 0; i < persons.length; i++) {
-      if (persons[i].name === newName) {
+      if (persons[i].name === newName && persons[i].number === newNumber) {
         alert(`${newName} is already added to phonebook`);
         nameExists = true;
+        break;
+      }
+      if (persons[i].name === newName && persons[i] !== newNumber) {
+        nameExists = true;
+        if (
+          window.confirm(
+            `${newName} is already added to phonebook, replace the old number with a new one?`
+          )
+        ) {
+          updateNumber = true;
+          personID = persons[i].id;
+        }
         break;
       }
     }
@@ -61,6 +75,17 @@ const App = () => {
         setNewName("");
         setNewNumber("");
       });
+    } else {
+      if (updateNumber) {
+        const personObject = { name: newName, number: newNumber };
+        personsService.updatePerson(personObject, personID).then(() => {
+          personsService.getAllPersons().then((persons) => {
+            setPersons(persons);
+            setNewName("");
+            setNewNumber("");
+          });
+        });
+      }
     }
   };
   return (
