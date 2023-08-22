@@ -27,6 +27,16 @@ const App = () => {
     setSearchValue(event.target.value);
   };
 
+  const handlePersonDelete = (personID, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personsService.deletePerson(personID).then(() => {
+        personsService.getAllPersons().then((personsData) => {
+          setPersons(personsData);
+        });
+      });
+    }
+  };
+
   const filteredPersons =
     searchValue === ""
       ? persons
@@ -69,7 +79,10 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons persons={filteredPersons} />
+      <Persons
+        persons={filteredPersons}
+        handlePersonDelete={handlePersonDelete}
+      />
     </div>
   );
 };

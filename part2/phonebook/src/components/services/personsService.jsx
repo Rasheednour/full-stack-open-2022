@@ -13,4 +13,8 @@ const createPerson = (personObject) => {
   return request.then((response) => response.data);
 };
 
-export default { getAllPersons, createPerson };
+const deletePerson = (personId) => {
+  return axios.delete(`${backendUrl}/persons/${personId}`);
+};
+
+export default { getAllPersons, createPerson, deletePerson };
