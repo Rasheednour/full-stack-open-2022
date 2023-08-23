@@ -33,7 +33,10 @@ const App = () => {
     <div>
       <span>find countries</span>
       <input value={searchValue} onChange={handleSearchChange} />
-      <Countries countryList={filteredCountries} />
+      <Countries
+        countryList={filteredCountries}
+        setCountries={setFilteredCountries}
+      />
     </div>
   );
 };
