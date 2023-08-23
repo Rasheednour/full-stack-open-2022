@@ -10,7 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchValue, setSearchValue] = useState("");
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     personsService.getAllPersons().then((personsData) => {
@@ -74,30 +74,43 @@ const App = () => {
       const personObject = { name: newName, number: newNumber };
       personsService.createPerson(personObject).then((newPerson) => {
         setPersons(persons.concat(newPerson));
-        setSuccessMessage(`Added ${newName}`);
+        setMessage({ text: `Added ${newName}`, type: "success" });
         setNewName("");
         setNewNumber("");
         setTimeout(() => {
-          setSuccessMessage(null);
+          setMessage(null);
         }, 4000);
       });
     } else {
       if (updateNumber) {
         const personObject = { name: newName, number: newNumber };
-        personsService.updatePerson(personObject, personID).then(() => {
-          personsService.getAllPersons().then((persons) => {
-            setPersons(persons);
+        personsService
+          .updatePerson(personObject, personID)
+          .then(() => {
+            personsService.getAllPersons().then((persons) => {
+              setPersons(persons);
+              setNewName("");
+              setNewNumber("");
+            });
+          })
+          .catch((error) => {
+            setMessage({
+              text: `Information of ${newName} has already been removed from server`,
+              type: "error",
+            });
             setNewName("");
             setNewNumber("");
+            setTimeout(() => {
+              setMessage(null);
+            }, 4000);
           });
-        });
       }
     }
   };
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} />
+      <Notification message={message} />
       <SearchFilter
         searchValue={searchValue}
         handleSearchChange={handleSearchChange}
