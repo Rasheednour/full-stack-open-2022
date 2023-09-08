@@ -110,3 +110,26 @@ describe("most favorite blog", () => {
     });
   });
 });
+
+describe("author with the most blogs", () => {
+    test("of empty list is {}", () => {
+        const result = listHelper.mostBlogs([]);
+        expect(result).toEqual({});
+      });
+    
+      test("when list has only one blog, is that blog's author", () => {
+        const result = listHelper.mostBlogs(listWithOneBlog);
+        expect(result).toEqual({
+          author: "Edsger W. Dijkstra",
+          blogs: 1,
+        });
+      });
+    
+      test("in a bigger list is calculated correctly", () => {
+        const result = listHelper.mostBlogs(listWithManyBlogs);
+        expect(result).toEqual({
+            author: "Robert C. Martin",
+            blogs: 3,
+          });
+      });
+})
