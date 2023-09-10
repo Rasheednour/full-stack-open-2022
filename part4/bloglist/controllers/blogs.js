@@ -8,10 +8,6 @@ blogsRouter.get("/", (request, response) => {
 });
 
 blogsRouter.post("/", (request, response, next) => {
-  const blogContent = request.body;
-  if (!blogContent.hasOwnProperty("likes")) {
-    blogContent.likes = 0;
-  }
   const blog = new Blog(request.body);
 
   blog
