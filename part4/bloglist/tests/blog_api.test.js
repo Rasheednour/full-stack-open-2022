@@ -91,6 +91,23 @@ describe("addition of a new blog", () => {
   });
 });
 
+describe("deletion of a blog", () => {
+  test("succeeds with status code 204 if id is valid", async () => {
+    const blogsAtstart = await helper.blogsInDb();
+    const blogToDelete = blogsAtstart[0];
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+    const blogsAtEnd = await helper.blogsInDb();
+
+    expect(blogsAtEnd).toHaveLength(blogsAtstart.length - 1);
+
+    const urls = blogsAtEnd.map((blog) => blog.id);
+
+    expect(urls).not.toContain(blogToDelete.url);
+  });
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
