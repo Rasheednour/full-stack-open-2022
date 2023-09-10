@@ -1,36 +1,22 @@
 const mongoose = require("mongoose");
 const supertest = require("supertest");
+const helper = require("./test_helper");
 const app = require("../app");
 
 const api = supertest(app);
 const Blog = require("../models/blog");
 
-const initialBlogs = [
-  {
-    title: "React patterns",
-    author: "Michael Chan",
-    url: "https://reactpatterns.com/",
-    likes: 7,
-  },
-  {
-    title: "Go To Statement Considered Harmful",
-    author: "Edsger W. Dijkstra",
-    url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-    likes: 5,
-  },
-];
-
 beforeEach(async () => {
   await Blog.deleteMany({});
-  let blogObject = new Blog(initialBlogs[0]);
+  let blogObject = new Blog(helper.initialBlogs[0]);
   await blogObject.save();
-  blogObject = new Blog(initialBlogs[1]);
+  blogObject = new Blog(helper.initialBlogs[1]);
   await blogObject.save();
 });
 
 test("correct number of blogs is returned", async () => {
   const response = await api.get("/api/blogs");
-  expect(response.body).toHaveLength(initialBlogs.length);
+  expect(response.body).toHaveLength(helper.initialBlogs.length);
 });
 
 test("the unique identifier property of blog posts is named id", async () => {
@@ -55,11 +41,11 @@ test("Making a POST request creates a new blog post", async () => {
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
-  const response = await api.get("/api/blogs");
+  const blogs = await helper.blogsInDb();
 
-  const urls = response.body.map((blog) => blog.url);
+  const urls = blogs.map((blog) => blog.url);
 
-  expect(response.body).toHaveLength(initialBlogs.length + 1);
+  expect(blogs).toHaveLength(helper.initialBlogs.length + 1);
   expect(urls).toContain(
     "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.html"
   );
@@ -70,7 +56,7 @@ test("the likes property defaults to 0 if missing from the POST request", async 
     title: "Type wars",
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
-  }
+  };
 
   await api
     .post("/api/blogs")
@@ -78,10 +64,9 @@ test("the likes property defaults to 0 if missing from the POST request", async 
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
-  const response = await api.get("/api/blogs");
-  const blogs = response.body;
-  expect(blogs).toHaveLength(initialBlogs.length + 1)
-  const createdBlog = blogs[blogs.length - 1]
+  const blogs = await helper.blogsInDb();
+  expect(blogs).toHaveLength(helper.initialBlogs.length + 1);
+  const createdBlog = blogs[blogs.length - 1];
   expect(createdBlog.likes).toBe(0);
 });
 
@@ -90,23 +75,17 @@ test("the beckend responds with 400 status code if the title and url properties 
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
     likes: 5,
-  }
+  };
 
   const noUrl = {
     title: "Type wars",
     author: "Robert C. Martin",
     likes: 5,
-  }
+  };
 
-  await api
-    .post("/api/blogs")
-    .send(noTitle)
-    .expect(400)
+  await api.post("/api/blogs").send(noTitle).expect(400);
 
-  await api
-    .post("/api/blogs")
-    .send(noUrl)
-    .expect(400)
+  await api.post("/api/blogs").send(noUrl).expect(400);
 });
 
 afterAll(async () => {
