@@ -85,6 +85,30 @@ test("the likes property defaults to 0 if missing from the POST request", async 
   expect(createdBlog.likes).toBe(0);
 });
 
+test("the beckend responds with 400 status code if the title and url properties of a new blog are missing", async () => {
+  const noTitle = {
+    author: "Robert C. Martin",
+    url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+    likes: 5,
+  }
+
+  const noUrl = {
+    title: "Type wars",
+    author: "Robert C. Martin",
+    likes: 5,
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(noTitle)
+    .expect(400)
+
+  await api
+    .post("/api/blogs")
+    .send(noUrl)
+    .expect(400)
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
