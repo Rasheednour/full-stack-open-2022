@@ -65,6 +65,26 @@ test("Making a POST request creates a new blog post", async () => {
   );
 });
 
+test("the likes property defaults to 0 if missing from the POST request", async () => {
+  const newBlog = {
+    title: "Type wars",
+    author: "Robert C. Martin",
+    url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+  }
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const response = await api.get("/api/blogs");
+  const blogs = response.body;
+  expect(blogs).toHaveLength(initialBlogs.length + 1)
+  const createdBlog = blogs[blogs.length - 1]
+  expect(createdBlog.likes).toBe(0);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
