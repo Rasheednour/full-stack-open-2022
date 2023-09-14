@@ -13,7 +13,7 @@ beforeEach(async () => {
   await Promise.all(promiseArray);
 });
 
-describe("when therre is initially some blogs saved", () => {
+describe("when there is initially some blogs saved", () => {
   test("correct number of blogs is returned", async () => {
     const response = await api.get("/api/blogs");
     expect(response.body).toHaveLength(helper.initialBlogs.length);
