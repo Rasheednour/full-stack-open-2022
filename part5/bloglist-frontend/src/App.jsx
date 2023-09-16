@@ -38,7 +38,10 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setMessage({ text: "Wrong credentials", type: "error" });
+      setMessage({
+        text: `Error: ${exception.response.data.error}`,
+        type: "error",
+      });
       setTimeout(() => {
         setMessage(null);
       }, 5000);
@@ -85,8 +88,18 @@ const App = () => {
       const blog = await blogService.create(newBlog);
       setNewBlog({ title: "", author: "", url: "" });
       setBlogs(blogs.concat(blog));
+      setMessage({
+        text: `a new blog ${blog.title} by ${blog.author} added`,
+        type: "success",
+      });
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
     } catch (exception) {
-      setMessage({ text: "Error creating blog", type: "error" });
+      setMessage({
+        text: `Error: ${exception.response.data.error}`,
+        type: "error",
+      });
       setTimeout(() => {
         setMessage(null);
       }, 5000);
