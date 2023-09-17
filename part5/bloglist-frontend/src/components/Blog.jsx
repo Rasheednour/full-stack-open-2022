@@ -1,18 +1,18 @@
-import { useState } from "react";
+import { useState } from 'react'
 
 const Blog = ({ blog, updateBlog, removeBlog }) => {
-  const [isHidden, setIsHidden] = useState(true);
+  const [isHidden, setIsHidden] = useState(true)
 
   const toggleDisplay = () => {
-    setIsHidden(!isHidden);
-  };
+    setIsHidden(!isHidden)
+  }
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: "solid",
+    border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-  };
+  }
   const updateLikes = () => {
     const updatedBlog = {
       author: blog.author,
@@ -20,21 +20,21 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
       url: blog.url,
       likes: blog.likes + 1,
       user: blog.user.id,
-    };
-    updateBlog(blog.id, updatedBlog, blog.user);
-  };
+    }
+    updateBlog(blog.id, updatedBlog, blog.user)
+  }
 
   const handleRemove = () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      removeBlog(blog.id);
+      removeBlog(blog.id)
     }
-  };
+  }
   return (
     <div style={blogStyle}>
       <span>
         {blog.title} {blog.author}
       </span>
-      <button onClick={toggleDisplay}>{isHidden ? "view" : "hide"}</button>
+      <button onClick={toggleDisplay}>{isHidden ? 'view' : 'hide'}</button>
       {!isHidden && (
         <div>
           <div>{blog.url}</div>
@@ -47,7 +47,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog
