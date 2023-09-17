@@ -3,6 +3,7 @@ import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import Notification from "./components/Notification";
+import LoginForm from "./components/LoginForm";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -51,35 +52,6 @@ const App = () => {
   const handleLogout = async (event) => {
     window.localStorage.removeItem("loggedBlogappUser");
     setUser(null);
-  };
-
-  const loginForm = () => {
-    return (
-      <div>
-        <h2>log in to application</h2>
-        <form onSubmit={handleLogin}>
-          <div>
-            username
-            <input
-              type="text"
-              value={username}
-              name="Username"
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            password
-            <input
-              type="password"
-              value={password}
-              name="Password"
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </div>
-    );
   };
 
   const createBlog = async (event) => {
@@ -154,7 +126,13 @@ const App = () => {
     <div>
       <Notification message={message} />
       {user === null ? (
-        loginForm()
+        <LoginForm
+          handleLogin={handleLogin}
+          username={username}
+          password={password}
+          setUsername={setUsername}
+          setPassword={setPassword}
+        />
       ) : (
         <div>
           <h2>blogs</h2>
