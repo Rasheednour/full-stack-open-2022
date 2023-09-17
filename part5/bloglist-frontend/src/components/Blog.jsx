@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlog }) => {
   const [isHidden, setIsHidden] = useState(true);
 
   const toggleDisplay = () => {
@@ -13,6 +13,16 @@ const Blog = ({ blog }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
+  const updateLikes = () => {
+    const updatedBlog = {
+      author: blog.author,
+      title: blog.title,
+      url: blog.url,
+      likes: blog.likes + 1,
+      user: blog.user.id,
+    };
+    updateBlog(blog.id, updatedBlog, blog.user);
+  };
   return (
     <div style={blogStyle}>
       <span>
@@ -24,7 +34,7 @@ const Blog = ({ blog }) => {
           <div>{blog.url}</div>
           <div>
             likes {blog.likes}
-            <button>like</button>
+            <button onClick={updateLikes}>like</button>
           </div>
           <div>{blog.user.name}</div>
         </div>

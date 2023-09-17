@@ -13,7 +13,6 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [user, setUser] = useState(null);
-  
 
   const blogFormRef = useRef();
 
@@ -82,6 +81,27 @@ const App = () => {
     }
   };
 
+  const updateBlog = async (id, blogObject, blogUser) => {
+    try {
+      const blog = await blogService.update(id, blogObject);
+      blog.user = blogUser;
+      const blogsClone = [...blogs];
+      const updateIndex = blogsClone.findIndex((o) => o.id === id);
+      blogsClone[updateIndex] = {
+        ...blogsClone[updateIndex],
+        likes: blogObject.likes,
+      };
+      setBlogs(blogsClone);
+    } catch (exception) {
+      setMessage({
+        text: `Error: ${exception.response.data.error}`,
+        type: "error",
+      });
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    }
+  };
   return (
     <div>
       <Notification message={message} />
@@ -99,12 +119,10 @@ const App = () => {
           <span>{user.name} logged in</span>
           <button onClick={handleLogout}>logout</button>
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <BlogForm
-              createBlog={createBlog}
-            />
+            <BlogForm createBlog={createBlog} />
           </Togglable>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
           ))}
         </div>
       )}
