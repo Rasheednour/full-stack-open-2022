@@ -18,10 +18,9 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then((blogs) => {
-      blogs.sort((a, b) => b.likes - a.likes)
-      setBlogs(blogs)
-    }
-    );
+      blogs.sort((a, b) => b.likes - a.likes);
+      setBlogs(blogs);
+    });
   }, []);
 
   useEffect(() => {
@@ -106,6 +105,22 @@ const App = () => {
       }, 5000);
     }
   };
+
+  const removeBlog = async (id) => {
+    try {
+      await blogService.remove(id);
+      const blogsClone = blogs.filter((blog) => blog.id !== id);
+      setBlogs(blogsClone);
+    } catch (exception) {
+      setMessage({
+        text: `Error: ${exception.response.data.error}`,
+        type: "error",
+      });
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    }
+  };
   return (
     <div>
       <Notification message={message} />
@@ -126,7 +141,12 @@ const App = () => {
             <BlogForm createBlog={createBlog} />
           </Togglable>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updateBlog={updateBlog}
+              removeBlog={removeBlog}
+            />
           ))}
         </div>
       )}
