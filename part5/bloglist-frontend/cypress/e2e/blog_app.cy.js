@@ -35,7 +35,6 @@ describe('Blog app', function() {
 
   describe('When logged in', function() {
     beforeEach(function() {
-      cy.contains('login').click()
       cy.get('#username').type('mluukkai')
       cy.get('#password').type('salainen')
       cy.get('#login-button').click()
@@ -48,6 +47,22 @@ describe('Blog app', function() {
       cy.get('#url-input').type('someblog.com')
       cy.get('#blog-form-button').click()
       cy.contains('a new blog some blog title by some blog author added')
+    })
+    describe('And some blogs exist', function() {
+      beforeEach(function() {
+        cy.contains('new blog').click()
+        cy.get('#title-input').type('some blog title')
+        cy.get('#author-input').type('some blog author')
+        cy.get('#url-input').type('someblog.com')
+        cy.get('#blog-form-button').click()
+      })
+      it('Users can like a blog', function () {
+        cy.get('#view-button').click()
+        cy.contains('some blog title some blog author')
+          .get('#like-button').click()
+        cy.contains('some blog title some blog author').parent().find('.likes')
+          .should('contain', 'likes 1')
+      })
     })
   })
 

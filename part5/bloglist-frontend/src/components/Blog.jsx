@@ -34,13 +34,13 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
       <span className='blog-title-author'>
         {blog.title} {blog.author}
       </span>
-      <button onClick={toggleDisplay}>{isHidden ? 'view' : 'hide'}</button>
+      <button onClick={toggleDisplay} id={isHidden ? 'view-button' : 'hide-button'}>{isHidden ? 'view' : 'hide'}</button>
       {!isHidden && (
         <div className='blog-info'>
           <div>{blog.url}</div>
-          <div>
+          <div className='likes'>
             likes {blog.likes}
-            <button onClick={updateLikes}>like</button>
+            <button onClick={updateLikes} id='like-button'>like</button>
           </div>
           <div>{blog.user.name}</div>
           <button onClick={handleRemove}>remove</button>
