@@ -18,8 +18,9 @@ const blog = {
 }
 
 let container
+const mockHandler = jest.fn()
 beforeEach(() => {
-  const component  = render(<Blog blog={blog} />)
+  const component  = render(<Blog blog={blog} updateBlog={mockHandler}/>)
   container = component.container
 })
 
@@ -40,4 +41,16 @@ test('blog url and number of likes show when the user clicks on the show button'
   button = screen.getByText('hide')
   await user.click(button)
   expect(div).not.toBeInTheDocument()
+})
+
+test('the event ', async () => {
+  const user = userEvent.setup()
+  let button = screen.getByText('view')
+  await user.click(button)
+  const div = container.querySelector('.blog-info')
+  expect(div).toBeInTheDocument()
+  button = screen.getByText('like')
+  await user.click(button)
+  await user.click(button)
+  expect(mockHandler.mock.calls).toHaveLength(2)
 })
