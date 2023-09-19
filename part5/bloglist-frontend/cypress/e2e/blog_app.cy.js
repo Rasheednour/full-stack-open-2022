@@ -18,7 +18,6 @@ describe('Blog app', function() {
 
   describe('Login',function() {
     it('succeeds with correct credentials', function() {
-      cy.contains('login').click()
       cy.get('#username').type('mluukkai')
       cy.get('#password').type('salainen')
       cy.get('#login-button').click()
@@ -26,7 +25,6 @@ describe('Blog app', function() {
     })
 
     it('fails with wrong credentials', function() {
-      cy.contains('login').click()
       cy.get('#username').type('mluukkai')
       cy.get('#password').type('wrong')
       cy.get('#login-button').click()
@@ -34,4 +32,23 @@ describe('Blog app', function() {
       cy.get('.error').should('have.css', 'color', 'rgb(255, 0, 0)')
     })
   })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.contains('login').click()
+      cy.get('#username').type('mluukkai')
+      cy.get('#password').type('salainen')
+      cy.get('#login-button').click()
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('new blog').click()
+      cy.get('#title-input').type('some blog title')
+      cy.get('#author-input').type('some blog author')
+      cy.get('#url-input').type('someblog.com')
+      cy.get('#blog-form-button').click()
+      cy.contains('a new blog some blog title by some blog author added')
+    })
+  })
+
 })
