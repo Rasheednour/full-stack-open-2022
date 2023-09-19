@@ -1,13 +1,7 @@
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
-    const user = {
-      name: 'Matti Luukkainen',
-      username: 'mluukkai',
-      password: 'salainen'
-    }
-    cy.request('POST', 'http://localhost:3003/api/users/', user)
-    cy.visit('http://localhost:5173')
+    cy.create_user({ name: 'Matti Luukkainen', username: 'mluukkai', password: 'salainen' })
   })
 
   it('Login form is shown', function() {
@@ -35,9 +29,7 @@ describe('Blog app', function() {
 
   describe('When logged in', function() {
     beforeEach(function() {
-      cy.get('#username').type('mluukkai')
-      cy.get('#password').type('salainen')
-      cy.get('#login-button').click()
+      cy.login({ username: 'mluukkai', password: 'salainen' })
     })
 
     it('A blog can be created', function() {
@@ -69,7 +61,13 @@ describe('Blog app', function() {
           .get('#remove-button').click()
         cy.contains('some blog title some blog author').should('not.exist')
       })
+      it('Users cannot see the delete button of a blog they havent created', function () {
+        cy.logout()
+        cy.create_user({ name: 'John Doe', username: 'jdoe', password: 'johnspassword' })
+        cy.login({ username: 'jdoe', password: 'johnspassword' })
+        cy.get('#view-button').click()
+        cy.contains('some blog title some blog author').parent().get('#remove-button').should('not.exist')
+      })
     })
   })
-
 })

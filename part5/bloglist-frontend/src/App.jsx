@@ -136,7 +136,7 @@ const App = () => {
         <div>
           <h2>blogs</h2>
           <span>{user.name} logged in</span>
-          <button onClick={handleLogout}>logout</button>
+          <button onClick={handleLogout} id='logout-button'>logout</button>
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
             <BlogForm createBlog={createBlog} />
           </Togglable>
@@ -146,6 +146,7 @@ const App = () => {
               blog={blog}
               updateBlog={updateBlog}
               removeBlog={removeBlog}
+              username={user.username}
             />
           ))}
         </div>

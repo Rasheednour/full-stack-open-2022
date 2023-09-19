@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, updateBlog, removeBlog }) => {
+const Blog = ({ blog, updateBlog, removeBlog, username }) => {
   const [isHidden, setIsHidden] = useState(true)
 
   const toggleDisplay = () => {
@@ -43,7 +43,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
             <button onClick={updateLikes} id='like-button'>like</button>
           </div>
           <div>{blog.user.name}</div>
-          <button onClick={handleRemove} id='remove-button'>remove</button>
+          {username === blog.user.username &&  <button onClick={handleRemove} id='remove-button'>remove</button>}
         </div>
       )}
     </div>
