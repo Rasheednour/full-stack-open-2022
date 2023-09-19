@@ -1,6 +1,6 @@
 describe('Blog app', function() {
   beforeEach(function() {
-    cy.request('POST', 'http://localhost:3003/api/testing/reset')
+    cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
     cy.create_user({ name: 'Matti Luukkainen', username: 'mluukkai', password: 'salainen' })
   })
 
@@ -67,6 +67,26 @@ describe('Blog app', function() {
         cy.login({ username: 'jdoe', password: 'johnspassword' })
         cy.get('#view-button').click()
         cy.contains('some blog title some blog author').parent().get('#remove-button').should('not.exist')
+        cy.logout()
+      })
+      it('Blogs are ordered according to likes, as the blog with most likes show on top', function () {
+
+        cy.contains('new blog').click()
+        cy.get('#title-input').type('another blog')
+        cy.get('#author-input').type('another author')
+        cy.get('#url-input').type('anothertblog.com')
+        cy.get('#blog-form-button').click().wait(500)
+
+        cy.contains('another blog another author').parent()
+          .contains('view').click().wait(500)
+
+        cy.contains('another blog another author').parent()
+          .contains('like').click().wait(500).click().wait(500)
+
+        cy.visit('')
+
+        cy.get('.blog').eq(0).should('contain', 'another blog another author')
+        cy.get('.blog').eq(1).should('contain', 'some blog title some blog author')
       })
     })
   })

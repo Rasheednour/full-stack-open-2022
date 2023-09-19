@@ -25,19 +25,19 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('login', ({ username, password }) => {
-  cy.request('POST', 'http://localhost:3003/api/login', {
+  cy.request('POST', `${Cypress.env('BACKEND')}/login`, {
     username, password
   }).then(({ body }) => {
     localStorage.setItem('loggedBlogappUser', JSON.stringify(body))
-    cy.visit('http://localhost:5173')
+    cy.visit('')
   })
 })
 
 Cypress.Commands.add('create_user', ({ name, username, password }) => {
-  cy.request('POST', 'http://localhost:3003/api/users', {
+  cy.request('POST', `${Cypress.env('BACKEND')}/users`, {
     name, username, password
   }).then(() => {
-    cy.visit('http://localhost:5173')
+    cy.visit('')
   })
 })
 
