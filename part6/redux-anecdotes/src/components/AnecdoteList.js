@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { newVote } from '../reducers/anecdoteReducer'
+import { addVote } from '../reducers/anecdoteReducer'
 const AnecdoteList = () => {
     const dispatch = useDispatch()
     const anecdotes = useSelector(state => {
@@ -11,7 +11,7 @@ const AnecdoteList = () => {
         }
     })
     const vote = (id) => {
-        dispatch(newVote(id))
+        dispatch(addVote(id))
       }
 
     return (
