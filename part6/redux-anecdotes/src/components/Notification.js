@@ -8,9 +8,13 @@ const Notification = () => {
     borderWidth: 1
   }
   return (
-    <div style={style}>
-      {notification}
+    <div>
+    {notification &&
+      <div style={style}>
+        { notification }
+      </div>}
     </div>
+    
   )
 }
 
